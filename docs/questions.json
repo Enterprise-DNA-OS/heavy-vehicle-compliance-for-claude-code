@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Which loads are booked on a truck or trailer with an open major defect?",
+    "command": "grounded"
+  },
+  {
+    "question": "Which vehicles are due for service by kilometres or by date in the next 30 days, and which are already overdue?",
+    "command": "service-due"
+  },
+  {
+    "question": "Which drivers have a licence, medical or fatigue training expiring this month, or no copy on file?",
+    "command": "credentials-due"
+  },
+  {
+    "question": "Which drivers' recorded work broke a standard hours limit in the last four weeks, and in which window?",
+    "command": "fatigue"
+  },
+  {
+    "question": "Which loads weighed more than the recorded limit, and was it a minor, substantial or severe risk breach?",
+    "command": "mass"
+  },
+  {
+    "question": "Which loads left with no recorded weight or no load restraint check?",
+    "command": "unweighed"
+  },
+  {
+    "question": "Which trips went more than 100 km from base with no work diary record behind them?",
+    "command": "diary-gaps"
+  },
+  {
+    "question": "Which subcontractors are carrying our loads with expired insurance or no signed chain of responsibility terms?",
+    "command": "subcontractor-review"
+  },
+  {
+    "question": "Which trucks keep coming back with faults?",
+    "command": "repeat-defects"
+  },
+  {
+    "question": "Which incident corrective actions are overdue?",
+    "command": "actions-due"
+  }
+]

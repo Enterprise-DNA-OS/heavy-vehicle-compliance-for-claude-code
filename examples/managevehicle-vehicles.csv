@@ -1,0 +1,4 @@
+Fleet Number,Registration,Description,Vehicle Type,Rego Expiry,Odometer,Service Interval Km
+IMP-PM10,IMP001,Kenworth K220 prime mover,Prime Mover,2027-03-31,"512,400",30000
+IMP-RG11,IMP002,Hino 500 rigid pantech,Rigid,2027-01-15,88200,20000
+IMP-TR12,IMP003,Krueger 45ft tautliner,Trailer,2027-06-30,,

@@ -1,24 +1,23 @@
 # Why there is no front end
 
-ManageVehicle is a database with a subscription. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
-
-That layer used to be the whole product, because talking to a database was hard. It is not hard any more. Open this folder in Claude Code, describe what you want, and it writes the query, runs it, and explains the answer. Ask a question the dashboard never had a chart for and you still get an answer.
+ManageVehicle is a set of screens over a database: vehicles, drivers, defects, services, documents, work records. The screens were needed because the database was hard to talk to. It is not hard any more. Open this folder in Claude Code, ask "what can't go tomorrow?", and it runs the query and explains the answer.
 
 ## What you gain
 
-- **Better answers.** A dashboard shows what the vendor decided to chart. Here you ask your own question, in your own words, and get it answered against your own data.
-- **No seats.** Everyone who needs to look can look. The bill does not grow with headcount.
-- **Your data in your Postgres.** Plain tables. Back them up, query them from anything, leave any time. There is no export step because there is nothing to leave.
-- **A process that matches you.** When your way of working changes, you add a command. You do not wait for a feature request to clear.
+- **Your own questions.** The dashboard shows what the vendor chose to chart. Here you ask which truck costs most per kilometre, or which driver has not reported a fault in a year.
+- **No per-vehicle fee.** Adding a truck or a trailer adds a row, not a line on the invoice.
+- **Your records in your database.** Plain tables. Back them up, query them from anything, hand an auditor a file.
+- **Rules that match your accreditation.** Change an interval, add a check, rename a field with `/customise`.
 
-## What you give up
+## What a screen gives that this does not
 
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
-- **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
+- **A driver phone app.** Drivers cannot do a pre-start or report a fault from a phone here. The office records it from what the driver says or writes. Enterprise DNA builds a phone form into a custom version where that matters.
+- **An approved electronic work diary.** This is not one and never will be. Drivers keep a written work diary or an NHVR-approved EWD; this reads the records.
+- **Live tracking.** GPS, speed and telematics stay with your telematics provider.
+- **Photos.** A defect photo lives where you file it; the record notes where.
 
 ## Who this fits
 
-Small teams who already use Claude Code, or who would rather learn to ask than learn another interface. If your team needs a screen to look at all day, keep ManageVehicle. If you need the answers more than the screens, this is cheaper, faster and yours.
+Carriers whose compliance work happens in the office: an operations or compliance person who keeps the records, books the loads and gets ready for the audit. If your drivers need an app all day, keep a driver app for the yard and use this for the records, or ask Enterprise DNA to build the app onto it.
 
 Installed and run for you: https://enterprisedna.co/omni/instead-of/managevehicle

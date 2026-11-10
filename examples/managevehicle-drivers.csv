@@ -1,0 +1,3 @@
+Driver ID,Driver Name,Licence Class,Licence Number,Licence Expiry,Medical Expiry,Fatigue Option
+IMP-D1,Imported Driver One,HC,9876543,2028-04-30,2027-02-28,Standard
+IMP-D2,Imported Driver Two,MC,8765432,2027-09-30,,Standard

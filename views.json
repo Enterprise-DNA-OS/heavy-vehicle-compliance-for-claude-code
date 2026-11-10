@@ -1,13 +1,63 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Heavy Vehicle Compliance for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Monday compliance review",
+    "subtitle": "Recorded dates are UTC. A record check, not dispatch clearance.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Loads that cannot go",
+        "note": "A planned trip on a vehicle or trailer with an open major defect.",
+        "sql": "select x.vehicle,x.code as defect,x.description,t.code as trip,t.departs_at,t.customer from open_defects x join vehicles v on v.code=x.vehicle join trips t on (t.vehicle_id=v.id or t.trailer_id=v.id) and t.status='planned' where x.severity='major' and x.status='open' order by t.departs_at"
+      },
+      {
+        "title": "Services due",
+        "sql": "select code as vehicle,rego,km_remaining as km_left,next_service_on as service_by,days_remaining as days_left from service_due where km_remaining<=3000 or days_remaining<=30 order by days_remaining"
+      },
+      {
+        "title": "Licences, medicals and training expiring in 30 days",
+        "sql": "select driver,name as credential,expires_on,days_left from credential_status where expires_on is null or expires_on<=current_date+30 order by expires_on nulls first"
+      },
+      {
+        "title": "Incident actions open",
+        "sql": "select code,occurred_on,kind,corrective_action,action_due from incident_actions where closed_on is null order by action_due"
+      }
+    ]
+  },
+  {
+    "name": "fleet",
+    "title": "Fleet maintenance",
+    "subtitle": "What an accreditation auditor asks to see first.",
+    "sections": [
+      {
+        "title": "Open defects",
+        "sql": "select code,vehicle,severity,reported_on,reported_by,days_open,description from open_defects order by severity,days_open desc"
+      },
+      {
+        "title": "Registration and inspection",
+        "sql": "select code,rego,name,rego_due,inspection_due from vehicles where status<>'retired' order by rego_due nulls first"
+      },
+      {
+        "title": "Maintenance spend, last 12 months",
+        "sql": "select v.code as vehicle,v.name,count(s.id)::int as jobs,coalesce(sum(s.cost_cents),0)::int as cost_cents from vehicles v left join services s on s.vehicle_id=v.id and s.done_on>=current_date-365 where v.status<>'retired' group by v.id order by cost_cents desc"
+      }
+    ]
+  },
+  {
+    "name": "loads",
+    "title": "Mass and restraint",
+    "subtitle": "Recorded weights against the limit recorded for each combination and route.",
+    "sections": [
+      {
+        "title": "Over the recorded limit",
+        "sql": "select code,customer,departs_at,vehicle,carrier,mass_limit_kg,gross_mass_kg,over_pct,mass_category from trip_mass where mass_category not in ('within limit','not weighed') order by over_pct desc"
+      },
+      {
+        "title": "No weight or no restraint check",
+        "sql": "select code,customer,departs_at,vehicle,carrier,mass_category,restraint_checked from trip_mass where status in ('departed','delivered') and (mass_category='not weighed' or not restraint_checked) order by departs_at desc"
+      },
+      {
+        "title": "Subcontractors to review",
+        "sql": "select name,accreditation,insurance_due,cor_acknowledged_on,last_review_on,open_trips from subcontractor_status where status='active' order by insurance_due nulls first"
       }
     ]
   }

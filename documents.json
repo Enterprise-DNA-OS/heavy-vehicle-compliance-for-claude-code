@@ -1,11 +1,80 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "vehicle-file",
+    "title": "Vehicle maintenance file",
+    "for_each": "select id,code from vehicles where status<>'retired'",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Vehicle",
+        "sql": "select code,rego,name,kind,gvm_kg,rego_due,inspection_due,odometer_km,odometer_on,maintenance_scheme from vehicles where id=$1"
+      },
+      {
+        "title": "Next service",
+        "sql": "select next_service_km,km_remaining,next_service_on,days_remaining from service_due where id=$1"
+      },
+      {
+        "title": "Service history",
+        "sql": "select code,kind,done_on,odometer_km,workshop,notes from services where vehicle_id=$1 order by done_on desc"
+      },
+      {
+        "title": "Faults reported and repaired",
+        "note": "Daily check faults, who found them and how they were fixed.",
+        "sql": "select code,reported_on,reported_by,severity,description,status,repaired_on,repair_note from defects where vehicle_id=$1 order by reported_on desc"
+      }
+    ]
+  },
+  {
+    "name": "driver-file",
+    "title": "Driver compliance file",
+    "for_each": "select id,code from drivers where active",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Driver",
+        "sql": "select code,name,licence_class,fatigue_option,work_diary,base from drivers where id=$1"
+      },
+      {
+        "title": "Licences, medicals and training",
+        "sql": "select kind,name,reference,expires_on,evidence from credentials where driver_id=$1 order by expires_on nulls first"
+      },
+      {
+        "title": "Recorded work, last 14 days",
+        "note": "UTC. Totals per day; the standard hours check runs in the fatigue command.",
+        "sql": "select (starts_at at time zone 'UTC')::date as work_day,round(sum(extract(epoch from (ends_at-starts_at))/60))::int as work_minutes,count(*)::int as periods from work_periods where driver_id=$1 and starts_at>=now()-interval '14 days' group by 1 order by 1 desc"
+      }
+    ]
+  },
+  {
+    "name": "subcontractor-review",
+    "title": "Subcontractor chain of responsibility review",
+    "for_each": "select id,code from subcontractors where status='active'",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Carrier",
+        "sql": "select name,abn,accreditation,insurance_due,cor_acknowledged_on,last_review_on from subcontractors where id=$1"
+      },
+      {
+        "title": "Loads in the last 90 days",
+        "sql": "select code,departs_at,origin,destination,mass_limit_kg,gross_mass_kg,restraint_checked,status from trips where subcontractor_id=$1 and departs_at>now()-interval '90 days' order by departs_at desc"
+      }
+    ]
+  },
+  {
+    "name": "incident-report",
+    "title": "Incident report",
+    "for_each": "select id,code from incidents",
+    "file": "code",
+    "sections": [
+      {
+        "title": "What happened",
+        "sql": "select i.code,i.occurred_on,i.kind,v.code as vehicle,d.name as driver,i.description from incidents i left join vehicles v on v.id=i.vehicle_id left join drivers d on d.id=i.driver_id where i.id=$1"
+      },
+      {
+        "title": "Cause and action",
+        "sql": "select root_cause,corrective_action,action_due,closed_on,notifiable,notified_on from incidents where id=$1"
+      }
     ]
   }
 ]
